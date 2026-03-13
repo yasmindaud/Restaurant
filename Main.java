@@ -1,55 +1,47 @@
+import java.util.Scanner;
 public class Main { 
     public static void main (String [] args) {
-        // Create Manager
-         Manager manager = new Manager (
-            "Alice",  
-               "alice@gmail.com", 
-                 101,
-               "Manager",  
-               30.0, 
-               8 
-    );
-        manager.openRestaurant();
-        manager.showDetails();
-        System.out.println("-----------------");
+        Scanner scanner = new Scanner(System.in);
+        try {
+            System.out.println("=====Welcome to the Restaurant Management System =====");
+            // Customer input
+            System.out.print("Enter customer name: ");
+            String name = scanner.nextLine();
 
+            System.out.print("Enter customer contact: ");
+            String contact = scanner.nextLine();
 
-        // Create Employee
-Employee waiter = new Employee(
-    "John",
-    "john@email.com",
-    102,
-    "Waiter",
-    15.0,
-    6
-);
-waiter.showDetails();
+            Customer customer = new Customer (name, contact,0);
+            customer.showDetails();
 
-        // Customer
-        Customer customer= new Customer (
-            "Yasmin",
-            "yas@email.com",
-            50
-        );
-        customer.showDetails();
+            // Menu Item Input
+            System.out.print("\nEnter food item name: ");
+            String itemName = scanner.nextLine();
+            System.out.print("Enter item price: ");
+            double price = scanner.nextDouble();
 
-        //Menu
-        Menu menu = new Menu();
-        MenuItem burger = new MenuItem("Burger", 8.99);
-        MenuItem soda = new MenuItem("Soda", 2.50);
+            MenuItem item = new MenuItem(itemName, price);
 
-        menu.addItem(burger);
-        menu.addItem(soda);
+            // Menu
+            Menu menu = new Menu();
+            menu.addItem(item);
 
-        menu.displayMenu();
+            System.out.println("\n--- Restaurant Menu ---");
+            menu.displayMenu();
 
-        // Order
-        Order order = new Order();
-        order.addItem(burger);
-        order.addItem(soda);
-
-        order.printReceipt();
-
-        
+            // Order
+            Order order = new Order();
+            order.addItem(item);
+            System.out.println("\n --- Order Receipt ---");
+            order.printReceipt();
+        }
+        catch (Exception e) {
+            System.out.println("Error: Invalid input. Please enter correct data.");
+        }
+        finally {
+            scanner.close();
+            System.out.println("\nSystem closed safely.");
+        }
     }
 }
+
