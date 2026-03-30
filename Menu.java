@@ -14,48 +14,61 @@ public class Menu {
         items.add(item);
     }
 
+    // Helper to find items during the ordering process
+    public MenuItem getItemByName(String name) {
+        for (MenuItem item : items) {
+            if (item.getName().equalsIgnoreCase(name)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
     public void displayMenu() {
         if (items.isEmpty()) {
             System.out.println("Menu is empty.");
         } else {
+            System.out.println("--- Current Menu ---");
             for (MenuItem item : items) {
-                System.out.println(item.getName() + "_" + item.getPrice() + "\n");
+                // Formatting for readability
+                System.out.println("- " + item.getName() + ": $" + item.getPrice());
             }
         }
     }
 
     public void saveToFile() {
-        try {
-            FileWriter writer = new FileWriter("menu.txt");
+        try (FileWriter writer = new FileWriter("menu.txt")) {
             for (MenuItem item : items) {
                 writer.write(item.getName() + "," + item.getPrice() + "\n");
             }
-            writer.close();
-            System.out.println("Menu saved to file.");
+            System.out.println("Menu saved successfully to menu.txt.");
         } catch (Exception e) {
-            System.out.println("Error saving file.");
+            System.out.println("Error saving menu: " + e.getMessage());
         }
     }
 
     public void loadFromFile() {
         try {
             File file = new File("menu.txt");
-            if (!file.exists()) {
-                return;
-            }
-            Scanner reader = new Scanner(file);
+            if (!file.exists()) return;
 
+            Scanner reader = new Scanner(file);
+            items.clear(); // Clear existing to avoid duplicates on reload
             while (reader.hasNextLine()) {
                 String line = reader.nextLine();
+                if (line.trim().isEmpty()) continue;
+                
                 String[] parts = line.split(",");
-                String name = parts[0];
-                double price = Double.parseDouble(parts[1]);
-                items.add(new MenuItem(name, price));
+                if (parts.length == 2) {
+                    String name = parts[0];
+                    double price = Double.parseDouble(parts[1]);
+                    items.add(new MenuItem(name, price));
+                }
             }
             reader.close();
-            System.out.println("Menu loaded from file.");
+            System.out.println("Menu loaded successfully.");
         } catch (Exception e) {
-            System.out.println("Error reading file.");
+            System.out.println("Error loading menu: " + e.getMessage());
         }
     }
 }

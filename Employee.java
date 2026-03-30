@@ -33,7 +33,7 @@ public class Employee extends User implements Payable {
     public void showDetails() {
         System.out.println("EmployeeID:" + employeeID);
         System.out.println("Role:" + role);
-        System.out.println("Payment: $" + calculatePayment());
+        System.out.println("Payment: ksh" + calculatePayment());
         System.out.println("------------------------");
     }
 

@@ -19,5 +19,5 @@ public abstract class User {
     public void setContactInfo(String contactInfo){
         this.contactInfo = contactInfo;
      }
-     public abstract void showDetails(); // Must be overridden
+     public abstract void showDetails(); 
 }

@@ -18,7 +18,7 @@ public class Order implements Payable {
     }
     public void printReceipt() {
         System.out.println("Restaurant:" + restaurantName);
-        System.out.println("Total Bill: $"  + calculatePayment());
+        System.out.println("Total Bill: ksh"  + calculatePayment());
         System.out.println( "========================");
 
     }

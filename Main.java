@@ -1,56 +1,94 @@
 import java.util.Scanner;
+import java.util.ArrayList;
+
 public class Main { 
-    public static void main (String [] args) {
+    public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Menu menu = new Menu();
+        ArrayList<Customer> customerList = new ArrayList<>();
 
-        try {
-            System.out.println("Welcome to the Restaurant Management System ");
+        // Load existing menu items from menu.txt
+        menu.loadFromFile();
 
-            menu.loadFromFile();
-            System.out.println("Enter customer name:");
-            String name = scanner.nextLine();
+        boolean running = true;
+        while (running) {
+            System.out.println("\n=== RESTAURANT MANAGEMENT SYSTEM ===");
+            System.out.println("1. Register New Customer");
+            System.out.println("2. Validate Customer & Place Order");
+            System.out.println("3. Exit");
+            System.out.print("Select an option: ");
 
-            System.out.println("Enter customer contact:");
-            String contact = scanner.nextLine();
+            String choice = scanner.nextLine();
 
+            switch (choice) {
+                case "1":
+                    System.out.print("Enter Customer Name: ");
+                    String name = scanner.nextLine();
+                    System.out.print("Enter Phone Number: ");
+                    String contact = scanner.nextLine();
+                    customerList.add(new Customer(name, contact, 0));
+                    System.out.println("Registration Successful!");
+                    break;
 
-            Customer customer = new Customer (name, contact, 0);
-            customer.showDetails();
+                case "2":
+                    System.out.print("Enter Customer Phone Number: ");
+                    String searchPhone = scanner.nextLine();
+                    Customer currentCust = null;
 
-            System.out.println("         ");
+                    for (Customer c : customerList) {
+                        if (c.getContactInfo().equals(searchPhone)) {
+                            currentCust = c;
+                            break;
+                        }
+                    }
 
-            System.out.println(" Enter food item name: ");
-            String itemName = scanner.nextLine();
+                    if (currentCust != null) {
+                        handleOrder(scanner, menu, currentCust);
+                    } else {
+                        System.out.println("Customer not found. Please register first.");
+                    }
+                    break;
 
-            System.out.print("Enter item price: ");
-            double price = scanner.nextDouble();
+                case "3":
+                    running = false;
+                    break;
 
-            MenuItem item = new MenuItem(itemName, price);
-
-            
-            menu.addItem(item);
-
-            System.out.println("\n Restaurant Menu ");
-            menu.displayMenu();
-
-            
-            Order order = new Order();
-            order.addItem(item);
-
-            System.out.println("\n  Order Receipt ");
-            order.printReceipt();
-
-            menu.saveToFile();
+                default:
+                    System.out.println("Invalid choice.");
+            }
         }
+
+        // Save menu changes back to file before closing
+        menu.saveToFile();
+        scanner.close();
+        System.out.println("System closed safely.");
+    }
+
+    private static void handleOrder(Scanner sc, Menu menu, Customer customer) {
+        System.out.println("\nValidated: " + customer.getName());
+        menu.displayMenu();
         
-        catch (Exception e) {
-            System.out.println("Error: Invalid input. Please enter correct data.");
+        double billTotal = 0;
+        while (true) {
+            System.out.print("Enter Item Name to order (or 'done' to finish): ");
+            String input = sc.nextLine();
+            
+            if (input.equalsIgnoreCase("done")) break;
+
+            MenuItem item = menu.getItemByName(input);
+            if (item != null) {
+                billTotal += item.getPrice();
+                System.out.println("Added " + item.getName() + " (kshb5=" + item.getPrice() + ")");
+            } else {
+                System.out.println("Item not found in menu.");
+            }
         }
-        finally {
-            scanner.close();
-            System.out.println("\nSystem closed safely.");
+
+        if (billTotal > 0) {
+            customer.addSpending(billTotal); // Uses the method from updated Customer.java
+            System.out.println("\n--- FINAL RECEIPT ---");
+            customer.showDetails();
+            System.out.println("Current Order Total: ksh" + billTotal);
         }
     }
 }
-
