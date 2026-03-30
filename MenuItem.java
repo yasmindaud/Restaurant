@@ -1,10 +1,22 @@
-public class MenuItem extends FoodItem {
-    public MenuItem( String itemName, double price) {
-        super(itemName, price);
+public class MenuItem {
+
+    private String name;
+    private double price;
+
+    public MenuItem(String itemName, double price) {
+        this.name = itemName;
+        this.price = price;
     }
-    @Override
-    public void displayItem(){
-        System.out.println(getItemName() + "-$" + getPrice());
+
+    public String getName() {
+        return name;
+    }
+
+    public double getPrice() {
+        return price;
     }
     
+    public void displayItem() {
+        System.out.println(getName() + "-$" + getPrice());
+    }
 }

@@ -2,39 +2,48 @@ import java.util.Scanner;
 public class Main { 
     public static void main (String [] args) {
         Scanner scanner = new Scanner(System.in);
+        Menu menu = new Menu();
+
         try {
-            System.out.println("=====Welcome to the Restaurant Management System =====");
-            // Customer input
-            System.out.print("Enter customer name: ");
+            System.out.println("Welcome to the Restaurant Management System ");
+
+            menu.loadFromFile();
+            System.out.println("Enter customer name:");
             String name = scanner.nextLine();
 
-            System.out.print("Enter customer contact: ");
+            System.out.println("Enter customer contact:");
             String contact = scanner.nextLine();
 
-            Customer customer = new Customer (name, contact,0);
+
+            Customer customer = new Customer (name, contact, 0);
             customer.showDetails();
 
-            // Menu Item Input
-            System.out.print("\nEnter food item name: ");
+            System.out.println("         ");
+
+            System.out.println(" Enter food item name: ");
             String itemName = scanner.nextLine();
+
             System.out.print("Enter item price: ");
             double price = scanner.nextDouble();
 
             MenuItem item = new MenuItem(itemName, price);
 
-            // Menu
-            Menu menu = new Menu();
+            
             menu.addItem(item);
 
-            System.out.println("\n--- Restaurant Menu ---");
+            System.out.println("\n Restaurant Menu ");
             menu.displayMenu();
 
-            // Order
+            
             Order order = new Order();
             order.addItem(item);
-            System.out.println("\n --- Order Receipt ---");
+
+            System.out.println("\n  Order Receipt ");
             order.printReceipt();
+
+            menu.saveToFile();
         }
+        
         catch (Exception e) {
             System.out.println("Error: Invalid input. Please enter correct data.");
         }
